@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Cierre de jornada — Médicos Sin Fronteras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --msf-red: #D6001C;
+      --msf-red-hover: #b80017;
+      --msf-red-light: rgba(214, 0, 28, 0.08);
+      --msf-red-border: rgba(214, 0, 28, 0.25);
+      --bg: #F7F4F3;
+      --card-bg: #FFFFFF;
+      --text: #171515;
+      --text-muted: #645D5D;
+      --border: #E5DFDE;
+      --border-focus: #D6001C;
+      --surface-subtle: #F0ECEB;
+      --toast-bg: #1E1B1B;
+      --toast-text: #FFFFFF;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --msf-red: #FF4A5E;
+        --msf-red-hover: #ff6475;
+        --msf-red-light: rgba(255, 74, 94, 0.14);
+        --msf-red-border: rgba(255, 74, 94, 0.35);
+        --bg: #161313;
+        --card-bg: #211D1D;
+        --text: #F5F1F1;
+        --text-muted: #A39B9A;
+        --border: #352F2F;
+        --border-focus: #FF4A5E;
+        --surface-subtle: #2A2525;
+        --toast-bg: #F5F1F1;
+        --toast-text: #161313;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+        --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Archivo', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      min-height: 100vh;
+      padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(32px + env(safe-area-inset-bottom, 0px)) 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Noscript notice */
+    noscript .noscript-banner {
+      display: block;
+      background-color: #D6001C;
+      color: #FFFFFF;
+      padding: 16px;
+      border-radius: var(--radius);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    /* 1. Header */
+    header {
+      padding: 8px 0 4px;
+    }
+    .brand-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--msf-red);
+      margin-bottom: 6px;
+    }
+    .brand-tag svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.15;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-top: 4px;
+      font-weight: 400;
+    }
+    .header-bar {
+      height: 4px;
+      background-color: var(--msf-red);
+      width: 100%;
+      border-radius: 2px;
+      margin-top: 14px;
+    }
+
+    /* Cards */
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      letter-spacing: -0.01em;
+    }
+
+    /* Inputs & Form */
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .label-hint {
+      font-weight: 400;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      height: 50px;
+      min-height: 48px;
+      padding: 0 14px;
+      font-size: 16px; /* iOS zoom prevention */
+      font-family: inherit;
+      color: var(--text);
+      background-color: var(--surface-subtle);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      outline: none;
+      transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border-color: var(--border-focus);
+      background-color: var(--card-bg);
+      box-shadow: 0 0 0 3px var(--msf-red-light);
+    }
+
+    /* Payment Methods Grid */
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn-payment {
+      min-height: 56px;
+      padding: 8px 10px;
+      background-color: var(--surface-subtle);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      text-align: center;
+      transition: all 0.15s ease;
+      user-select: none;
+      color: var(--text);
+      position: relative;
+    }
+    .btn-payment:hover {
+      border-color: var(--text-muted);
+    }
+    .btn-payment:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+    .btn-payment.selected {
+      background-color: var(--msf-red-light);
+      border-color: var(--msf-red);
+      box-shadow: 0 0 0 1px var(--msf-red);
+    }
+    .payment-name {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .payment-pts {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--msf-red);
+    }
+    .btn-payment.selected .payment-pts {
+      color: var(--msf-red);
+    }
+
+    /* Error Banner */
+    .error-msg {
+      display: none;
+      color: #FFFFFF;
+      background-color: var(--msf-red);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      align-items: center;
+      gap: 8px;
+      animation: fadeIn 0.15s ease-out;
+    }
+    .error-msg svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      fill: currentColor;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      min-height: 50px;
+      background-color: var(--msf-red);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.15s ease, transform 0.05s ease;
+      box-shadow: 0 2px 6px rgba(214, 0, 28, 0.25);
+      margin-top: 12px;
+    }
+    .btn-primary:active {
+      transform: scale(0.99);
+      background-color: var(--msf-red-hover);
+    }
+    .btn-primary:focus-visible {
+      outline: 3px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      min-height: 48px;
+      background-color: transparent;
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+      margin-top: 8px;
+    }
+    .btn-secondary:hover {
+      background-color: var(--surface-subtle);
+    }
+    .btn-secondary:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+
+    .edit-form-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    /* 4. Socios list */
+    .socios-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .empty-state {
+      padding: 24px 16px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius-sm);
+      line-height: 1.45;
+    }
+
+    .socio-row {
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .socio-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .socio-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .socio-amount {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .socio-details {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+    }
+    .socio-details .pts-badge {
+      font-weight: 800;
+      color: var(--msf-red);
+    }
+    .socio-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 2px;
+      justify-content: flex-end;
+    }
+    .btn-small {
+      min-height: 36px;
+      padding: 0 12px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background-color: var(--card-bg);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .btn-small:hover {
+      border-color: var(--text-muted);
+    }
+    .btn-small.btn-danger-confirm {
+      background-color: var(--msf-red);
+      color: #FFFFFF;
+      border-color: var(--msf-red);
+    }
+
+    /* 5. Summary / Resumen */
+    .hero-stat {
+      background: linear-gradient(135deg, var(--msf-red) 0%, #b80017 100%);
+      color: #FFFFFF;
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(214, 0, 28, 0.28);
+      margin-bottom: 14px;
+    }
+    .hero-stat-label {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.92;
+      margin-bottom: 4px;
+    }
+    .hero-stat-value {
+      font-size: 46px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+    .hero-stat-sub {
+      font-size: 12px;
+      opacity: 0.85;
+      margin-top: 6px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stat-card-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .stat-card-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    /* Payment summary table */
+    .table-container {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background-color: var(--card-bg);
+    }
+    .pay-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+    .pay-table th {
+      background-color: var(--surface-subtle);
+      text-align: left;
+      padding: 9px 12px;
+      font-weight: 800;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+    }
+    .pay-table th:last-child {
+      text-align: right;
+    }
+    .pay-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .pay-table tr:last-child td {
+      border-bottom: none;
+    }
+    .pay-table td:last-child {
+      text-align: right;
+      font-weight: 800;
+    }
+    .pts-chip {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    /* 6. Action buttons */
+    .action-buttons-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .btn-action {
+      width: 100%;
+      min-height: 50px;
+      background-color: var(--card-bg);
+      color: var(--text);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-action:active {
+      transform: scale(0.99);
+      background-color: var(--surface-subtle);
+    }
+    .btn-action:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+    .btn-action svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .btn-danger-outline {
+      border: 2px solid var(--msf-red);
+      color: var(--msf-red);
+      background-color: transparent;
+    }
+    .btn-danger-outline:hover {
+      background-color: var(--msf-red-light);
+    }
+    .btn-danger-outline.confirming {
+      background-color: var(--msf-red);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(214, 0, 28, 0.35);
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.4;
+      padding: 0 10px;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .toast {
+      background-color: var(--toast-bg);
+      color: var(--toast-text);
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-size: 14.5px;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: auto;
+      white-space: nowrap;
+      max-width: 90vw;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <noscript>
+      <div class="noscript-banner" role="alert">
+        Esta página no puede funcionar acá porque JavaScript está desactivado o bloqueado. Abrila desde el link publicado, en Chrome o Safari.
+      </div>
+    </noscript>
+
+    <!-- 1. Encabezado -->
+    <header>
+      <div class="brand-tag">
+        <svg viewBox="0 0 24 24"><path d="M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z"/></svg>
+        Médicos Sin Fronteras • F2F Argentina
+      </div>
+      <h1>Cierre de jornada</h1>
+      <p class="subtitle">Cargá los socios del día y obtené los totales al instante.</p>
+      <div class="header-bar" aria-hidden="true"></div>
+    </header>
+
+    <!-- 2. Datos de la jornada -->
+    <section class="card" aria-labelledby="heading-jornada">
+      <h2 id="heading-jornada" class="card-title">Datos de la jornada</h2>
+      <div class="row-2">
+        <div class="form-group">
+          <label for="input-horas">Horas trabajadas</label>
+          <input
+            type="text"
+            id="input-horas"
+            inputmode="decimal"
+            placeholder="ej. 6,5"
+            enterkeyhint="next"
+            autocomplete="off"
+            spellcheck="false"
+          >
+        </div>
+        <div class="form-group">
+          <label for="input-captadores">Captadores</label>
+          <input
+            type="text"
+            id="input-captadores"
+            inputmode="numeric"
+            placeholder="ej. 4"
+            enterkeyhint="next"
+            autocomplete="off"
+            spellcheck="false"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Nuevo socio -->
+    <section class="card" aria-labelledby="form-socio-title">
+      <h2 id="form-socio-title" class="card-title">Nuevo socio</h2>
+
+      <div class="row-2">
+        <div class="form-group">
+          <label for="input-edad">Edad <span class="label-hint">(1 a 99)</span></label>
+          <input
+            type="text"
+            id="input-edad"
+            inputmode="numeric"
+            maxlength="2"
+            placeholder="ej. 32"
+            enterkeyhint="next"
+            autocomplete="off"
+          >
+        </div>
+        <div class="form-group">
+          <label for="input-monto">Monto (ARS)</label>
+          <input
+            type="text"
+            id="input-monto"
+            inputmode="decimal"
+            placeholder="ej. 12.500"
+            enterkeyhint="next"
+            autocomplete="off"
+          >
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top: 4px;">
+        <label id="payment-group-label">Medio de pago</label>
+        <div
+          class="payment-grid"
+          id="payment-grid"
+          role="radiogroup"
+          aria-labelledby="payment-group-label"
+        >
+          <!-- Generados dinámicamente según configuración -->
+        </div>
+      </div>
+
+      <div id="form-error" class="error-msg" role="alert" aria-live="assertive">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="form-error-text"></span>
+      </div>
+
+      <div id="standard-actions">
+        <button type="button" id="btn-submit" class="btn-primary">
+          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Agregar socio
+        </button>
+      </div>
+
+      <div id="edit-actions" class="edit-form-actions" style="display: none;">
+        <button type="button" id="btn-save-edit" class="btn-primary">Guardar cambios</button>
+        <button type="button" id="btn-cancel-edit" class="btn-secondary">Cancelar</button>
+      </div>
+    </section>
+
+    <!-- 4. Socios cargados -->
+    <section class="card" aria-labelledby="heading-socios">
+      <h2 id="heading-socios" class="card-title">
+        Socios cargados <span id="contador-socios" style="font-weight: 700; color: var(--msf-red);">(0)</span>
+      </h2>
+      <div id="socios-list" class="socios-list">
+        <!-- Renderizado dinámico -->
+      </div>
+    </section>
+
+    <!-- 5. Resumen del día -->
+    <section class="card" aria-labelledby="heading-resumen">
+      <h2 id="heading-resumen" class="card-title">Resumen del día</h2>
+
+      <!-- Tarjeta destacada Puntos por hora -->
+      <div class="hero-stat">
+        <div class="hero-stat-label">Puntos por hora</div>
+        <div class="hero-stat-value" id="stat-pts-hora">–</div>
+        <div class="hero-stat-sub">Total de puntos ÷ horas trabajadas</div>
+      </div>
+
+      <!-- Grilla de métricas -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-card-label">Total socios</span>
+          <span class="stat-card-value" id="stat-total-socios">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-label">Total puntos</span>
+          <span class="stat-card-value" id="stat-total-puntos">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-label">Total recaudado</span>
+          <span class="stat-card-value" id="stat-total-recaudado">$ 0,00</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-label">Promedio / socio</span>
+          <span class="stat-card-value" id="stat-promedio-socio">–</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-label">Edad promedio</span>
+          <span class="stat-card-value" id="stat-edad-promedio">–</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-label">Horas / Captadores</span>
+          <span class="stat-card-value" id="stat-horas-captadores">– / –</span>
+        </div>
+      </div>
+
+      <!-- Tabla por medio de pago -->
+      <div class="table-container">
+        <table class="pay-table">
+          <thead>
+            <tr>
+              <th>Medio de pago</th>
+              <th>Cantidad</th>
+            </tr>
+          </thead>
+          <tbody id="payment-summary-body">
+            <!-- Rellenado dinámico -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6. Botones de acción -->
+    <section class="action-buttons-group" aria-label="Acciones de cierre">
+      <button type="button" id="btn-copiar-resumen" class="btn-action">
+        <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        Copiar resumen
+      </button>
+
+      <button type="button" id="btn-copiar-listado" class="btn-action">
+        <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+        Copiar listado de socios
+      </button>
+
+      <button type="button" id="btn-borrar-todo" class="btn-action btn-danger-outline">
+        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        <span id="btn-borrar-text">Borrar todo</span>
+      </button>
+
+      <p class="footer-note">
+        Los datos se guardan solo en este teléfono para que no se pierdan si se recarga la página. No se suben a ningún lado.
+      </p>
+    </section>
+  </div>
+
+  <!-- Toast notificación -->
+  <div class="toast-container" aria-live="polite">
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script>
+    /* ============================================================
+       7. CONFIGURACIÓN DE PUNTAJES Y MEDIOS DE PAGO (Un solo lugar)
+       ============================================================ */
+    const MEDIOS_PAGO_CONFIG = [
+      { id: 'credito',  nombre: 'Tarjeta de crédito',                  puntos: 1.0, ptsText: '1 punto' },
+      { id: 'debito',   nombre: 'Tarjeta de débito',                   puntos: 0.7, ptsText: '0,7 puntos' },
+      { id: 'cbu',      nombre: 'CBU bancario',                        puntos: 0.6, ptsText: '0,6 puntos' },
+      { id: 'prepaga',  nombre: 'Tarjeta prepaga / Billetera virtual', puntos: 0.4, ptsText: '0,4 puntos' }
+    ];
+
+    const STORAGE_KEY = 'msf_cierre_jornada_v1';
+
+    // Estado de la aplicación
+    let state = {
+      horas: '',
+      captadores: '',
+      socios: [], // array de { id, edad, monto, medioId, medioNombre, puntos }
+      selectedMedioId: null,
+      editingSocioId: null
+    };
+
+    // Referencias DOM
+    const inputHoras = document.getElementById('input-horas');
+    const inputCaptadores = document.getElementById('input-captadores');
+    const inputEdad = document.getElementById('input-edad');
+    const inputMonto = document.getElementById('input-monto');
+    const paymentGrid = document.getElementById('payment-grid');
+    const formError = document.getElementById('form-error');
+    const formErrorText = document.getElementById('form-error-text');
+    const btnSubmit = document.getElementById('btn-submit');
+    const standardActions = document.getElementById('standard-actions');
+    const editActions = document.getElementById('edit-actions');
+    const btnSaveEdit = document.getElementById('btn-save-edit');
+    const btnCancelEdit = document.getElementById('btn-cancel-edit');
+    const formSocioTitle = document.getElementById('form-socio-title');
+    const sociosList = document.getElementById('socios-list');
+    const contadorSocios = document.getElementById('contador-socios');
+    const toastEl = document.getElementById('toast');
+
+    // Métricas DOM
+    const statPtsHora = document.getElementById('stat-pts-hora');
+    const statTotalSocios = document.getElementById('stat-total-socios');
+    const statTotalPuntos = document.getElementById('stat-total-puntos');
+    const statTotalRecaudado = document.getElementById('stat-total-recaudado');
+    const statPromedioSocio = document.getElementById('stat-promedio-socio');
+    const statEdadPromedio = document.getElementById('stat-edad-promedio');
+    const statHorasCaptadores = document.getElementById('stat-horas-captadores');
+    const paymentSummaryBody = document.getElementById('payment-summary-body');
+
+    // Botones de acción
+    const btnCopiarResumen = document.getElementById('btn-copiar-resumen');
+    const btnCopiarListado = document.getElementById('btn-copiar-listado');
+    const btnBorrarTodo = document.getElementById('btn-borrar-todo');
+    const btnBorrarText = document.getElementById('btn-borrar-text');
+
+    /* ============================================================
+       FORMATEO ES-AR & PARSERS
+       ============================================================ */
+    function formatPesos(monto) {
+      if (isNaN(monto) || monto === null) return '$ 0,00';
+      const formatted = new Intl.NumberFormat('es-AR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(monto);
+      return `$ ${formatted}`;
+    }
+
+    function formatNumberDecimal(num, decimals = 2) {
+      if (isNaN(num) || num === null) return '–';
+      return new Intl.NumberFormat('es-AR', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: decimals
+      }).format(num);
+    }
+
+    function parseArgDecimal(str) {
+      if (!str) return NaN;
+      let clean = String(str).trim();
+      // Si tiene puntos y comas, asumimos puntos como miles y coma como decimal
+      if (clean.includes('.') && clean.includes(',')) {
+        clean = clean.replace(/\./g, '').replace(',', '.');
+      } else if (clean.includes(',')) {
+        // Solo coma: es decimal
+        clean = clean.replace(',', '.');
+      } else if (clean.includes('.')) {
+        // Si hay un punto, verificar si tiene 3 dígitos al final (posible separador de miles ej. 12.500)
+        const parts = clean.split('.');
+        if (parts.length === 2 && parts[1].length === 3) {
+          // Tratarlo como miles si no es menor a 100
+          clean = parts.join('');
+        } else if (parts.length > 2) {
+          clean = parts.join('');
+        }
+      }
+      return parseFloat(clean);
+    }
+
+    /* ============================================================
+       INICIALIZACIÓN DE BOTONES DE MEDIO DE PAGO
+       ============================================================ */
+    function renderPaymentButtons() {
+      paymentGrid.innerHTML = '';
+      MEDIOS_PAGO_CONFIG.forEach(item => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-payment';
+        btn.id = `pay-${item.id}`;
+        btn.role = 'radio';
+        btn.setAttribute('aria-checked', 'false');
+        btn.dataset.id = item.id;
+        btn.innerHTML = `
+          <span class="payment-name">${item.nombre}</span>
+          <span class="payment-pts">${item.ptsText}</span>
+        `;
+        btn.addEventListener('click', () => selectMedio(item.id));
+        paymentGrid.appendChild(btn);
+      });
+    }
+
+    function selectMedio(medioId) {
+      hideError();
+      state.selectedMedioId = medioId;
+      const allBtns = paymentGrid.querySelectorAll('.btn-payment');
+      allBtns.forEach(btn => {
+        const isMatch = btn.dataset.id === medioId;
+        btn.classList.toggle('selected', isMatch);
+        btn.setAttribute('aria-checked', isMatch ? 'true' : 'false');
+      });
+    }
+
+    function clearMedioSelection() {
+      state.selectedMedioId = null;
+      const allBtns = paymentGrid.querySelectorAll('.btn-payment');
+      allBtns.forEach(btn => {
+        btn.classList.remove('selected');
+        btn.setAttribute('aria-checked', 'false');
+      });
+    }
+
+    /* ============================================================
+       TOAST & ERRORES
+       ============================================================ */
+    let toastTimeout = null;
+    function showToast(msg) {
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      toastTimeout = setTimeout(() => {
+        toastEl.classList.remove('show');
+      }, 2000);
+    }
+
+    function showError(msg) {
+      formErrorText.textContent = msg;
+      formError.style.display = 'flex';
+      formError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideError() {
+      formError.style.display = 'none';
+      formErrorText.textContent = '';
+    }
+
+    /* ============================================================
+       LOCALSTORAGE
+       ============================================================ */
+    function saveToStorage() {
+      try {
+        const data = {
+          horas: state.horas,
+          captadores: state.captadores,
+          socios: state.socios
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.warn('No se pudo guardar en localStorage:', e);
+      }
+    }
+
+    function loadFromStorage() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state.horas = parsed.horas || '';
+          state.captadores = parsed.captadores || '';
+          state.socios = Array.isArray(parsed.socios) ? parsed.socios : [];
+          inputHoras.value = state.horas;
+          inputCaptadores.value = state.captadores;
+        }
+      } catch (e) {
+        console.warn('Error leyendo localStorage:', e);
+      }
+    }
+
+    /* ============================================================
+       VALIDACIONES Y GESTIÓN DE SOCIOS
+       ============================================================ */
+    function validateForm() {
+      const edadRaw = inputEdad.value.trim();
+      const edadNum = parseInt(edadRaw, 10);
+      if (!edadRaw || isNaN(edadNum) || edadNum <= 0) {
+        return { valid: false, error: 'La edad tiene que ser un número entero mayor a 0.' };
+      }
+
+      const montoRaw = inputMonto.value.trim();
+      const montoNum = parseArgDecimal(montoRaw);
+      if (!montoRaw || isNaN(montoNum) || montoNum <= 0) {
+        return { valid: false, error: 'El monto tiene que ser mayor a 0.' };
+      }
+
+      if (!state.selectedMedioId) {
+        return { valid: false, error: 'Elegí el medio de pago.' };
+      }
+
+      const medioConfig = MEDIOS_PAGO_CONFIG.find(m => m.id === state.selectedMedioId);
+      return {
+        valid: true,
+        data: {
+          edad: edadNum,
+          monto: montoNum,
+          medioId: medioConfig.id,
+          medioNombre: medioConfig.nombre,
+          puntos: medioConfig.puntos
+        }
+      };
+    }
+
+    function addSocio() {
+      const res = validateForm();
+      if (!res.valid) {
+        showError(res.error);
+        return;
+      }
+
+      hideError();
+      const newSocio = {
+        id: 's_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        ...res.data
+      };
+
+      state.socios.push(newSocio);
+      saveToStorage();
+      resetForm();
+      updateUI();
+      showToast('Socio agregado');
+      inputEdad.focus();
+    }
+
+    function resetForm() {
+      inputEdad.value = '';
+      inputMonto.value = '';
+      clearMedioSelection();
+      hideError();
+      state.editingSocioId = null;
+      formSocioTitle.textContent = 'Nuevo socio';
+      standardActions.style.display = 'block';
+      editActions.style.display = 'none';
+    }
+
+    function startEdit(id) {
+      const socio = state.socios.find(s => s.id === id);
+      if (!socio) return;
+
+      state.editingSocioId = id;
+      formSocioTitle.textContent = 'Editar socio';
+      standardActions.style.display = 'none';
+      editActions.style.display = 'flex';
+
+      inputEdad.value = socio.edad;
+      // Formatear monto en input para facilidad de edición
+      inputMonto.value = new Intl.NumberFormat('es-AR', {
+        minimumFractionDigits: socio.monto % 1 === 0 ? 0 : 2,
+        maximumFractionDigits: 2
+      }).format(socio.monto);
+
+      selectMedio(socio.medioId);
+      hideError();
+
+      inputEdad.focus();
+      document.querySelector('section[aria-labelledby="form-socio-title"]').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function saveEdit() {
+      if (!state.editingSocioId) return;
+      const res = validateForm();
+      if (!res.valid) {
+        showError(res.error);
+        return;
+      }
+
+      const index = state.socios.findIndex(s => s.id === state.editingSocioId);
+      if (index !== -1) {
+        state.socios[index] = {
+          ...state.socios[index],
+          ...res.data
+        };
+        saveToStorage();
+        resetForm();
+        updateUI();
+        showToast('Cambios guardados');
+      }
+    }
+
+    function cancelEdit() {
+      resetForm();
+      updateUI();
+    }
+
+    function deleteSocio(id) {
+      state.socios = state.socios.filter(s => s.id !== id);
+      if (state.editingSocioId === id) {
+        resetForm();
+      }
+      saveToStorage();
+      updateUI();
+      showToast('Socio eliminado');
+    }
+
+    /* ============================================================
+       RENDERIZADO DE LISTA Y CÁLCULOS
+       ============================================================ */
+    let deleteTimeouts = {};
+
+    function renderSociosList() {
+      contadorSocios.textContent = `(${state.socios.length})`;
+      if (state.socios.length === 0) {
+        sociosList.innerHTML = `
+          <div class="empty-state">
+            Todavía no cargaste ningún socio. Completá el formulario y tocá "Agregar socio".
+          </div>
+        `;
+        return;
+      }
+
+      sociosList.innerHTML = '';
+      state.socios.forEach((s, idx) => {
+        const itemNumber = idx + 1;
+        const row = document.createElement('div');
+        row.className = 'socio-row';
+        row.id = `socio-${s.id}`;
+
+        const ptsFormateados = formatNumberDecimal(s.puntos, 2) + ' pts';
+
+        row.innerHTML = `
+          <div class="socio-header">
+            <span class="socio-title">Socio ${itemNumber}</span>
+            <span class="socio-amount">${formatPesos(s.monto)}</span>
+          </div>
+          <div class="socio-details">
+            <span>${s.edad} años,</span>
+            <span>${s.medioNombre},</span>
+            <span class="pts-badge">${ptsFormateados}</span>
+          </div>
+          <div class="socio-actions">
+            <button type="button" class="btn-small btn-edit" data-id="${s.id}">Editar</button>
+            <button type="button" class="btn-small btn-delete" data-id="${s.id}">Eliminar</button>
+          </div>
+        `;
+
+        // Eventos
+        const btnEdit = row.querySelector('.btn-edit');
+        btnEdit.addEventListener('click', () => startEdit(s.id));
+
+        const btnDelete = row.querySelector('.btn-delete');
+        btnDelete.addEventListener('click', () => handleTwoTouchDelete(btnDelete, s.id));
+
+        sociosList.appendChild(row);
+      });
+    }
+
+    function handleTwoTouchDelete(button, id) {
+      if (button.dataset.confirming === 'true') {
+        if (deleteTimeouts[id]) clearTimeout(deleteTimeouts[id]);
+        deleteSocio(id);
+      } else {
+        button.dataset.confirming = 'true';
+        button.textContent = 'Tocá de nuevo para eliminar';
+        button.classList.add('btn-danger-confirm');
+
+        deleteTimeouts[id] = setTimeout(() => {
+          button.dataset.confirming = 'false';
+          button.textContent = 'Eliminar';
+          button.classList.remove('btn-danger-confirm');
+          delete deleteTimeouts[id];
+        }, 3500);
+      }
+    }
+
+    function calculateMetrics() {
+      const horasVal = parseArgDecimal(state.horas);
+      const captadoresVal = parseInt(state.captadores, 10);
+      const countSocios = state.socios.length;
+
+      let totalPuntos = 0;
+      let totalRecaudado = 0;
+      let sumaEdades = 0;
+      const countByMedio = {};
+      MEDIOS_PAGO_CONFIG.forEach(m => { countByMedio[m.id] = 0; });
+
+      state.socios.forEach(s => {
+        totalPuntos += (s.puntos || 0);
+        totalRecaudado += (s.monto || 0);
+        sumaEdades += (s.edad || 0);
+        if (countByMedio[s.medioId] !== undefined) {
+          countByMedio[s.medioId]++;
+        }
+      });
+
+      // Puntos por hora
+      let ptsPorHora = '–';
+      if (!isNaN(horasVal) && horasVal > 0 && totalPuntos > 0) {
+        ptsPorHora = formatNumberDecimal(totalPuntos / horasVal, 2);
+      }
+
+      // Promedio por socio
+      let promSocio = '–';
+      if (countSocios > 0) {
+        promSocio = formatPesos(totalRecaudado / countSocios);
+      }
+
+      // Edad promedio
+      let edadProm = '–';
+      if (countSocios > 0) {
+        edadProm = formatNumberDecimal(sumaEdades / countSocios, 1);
+      }
+
+      // Horas / captadores display
+      const horasDisp = (!isNaN(horasVal) && horasVal > 0) ? formatNumberDecimal(horasVal, 2) : '–';
+      const captDisp = (!isNaN(captadoresVal) && captadoresVal > 0) ? captadoresVal : '–';
+
+      // Actualizar DOM
+      statPtsHora.textContent = ptsPorHora;
+      statTotalSocios.textContent = countSocios;
+      statTotalPuntos.textContent = formatNumberDecimal(totalPuntos, 2);
+      statTotalRecaudado.textContent = formatPesos(totalRecaudado);
+      statPromedioSocio.textContent = promSocio;
+      statEdadPromedio.textContent = edadProm;
+      statHorasCaptadores.textContent = `${horasDisp} / ${captDisp}`;
+
+      // Render tabla de medios
+      paymentSummaryBody.innerHTML = '';
+      MEDIOS_PAGO_CONFIG.forEach(m => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${m.nombre} <span class="pts-chip">(${m.ptsText})</span></td>
+          <td>${countByMedio[m.id]}</td>
+        `;
+        paymentSummaryBody.appendChild(tr);
+      });
+
+      return {
+        horasVal,
+        captadoresVal,
+        horasDisp,
+        captDisp,
+        countSocios,
+        totalPuntos,
+        ptsPorHora,
+        totalRecaudado,
+        promSocio,
+        edadProm,
+        countByMedio
+      };
+    }
+
+    function updateUI() {
+      renderSociosList();
+      calculateMetrics();
+    }
+
+    /* ============================================================
+       CLIPBOARD & COMPARTIR WHATSAPP
+       ============================================================ */
+    async function copyToClipboard(text, successMsg) {
+      let copied = false;
+      if (navigator.clipboard && window.isSecureContext && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(text);
+          copied = true;
+        } catch (e) {
+          copied = false;
+        }
+      }
+
+      if (!copied) {
+        // Fallback clásico con textarea
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          ta.style.top = '0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          copied = document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (err) {
+          copied = false;
+        }
+      }
+
+      if (copied) {
+        showToast(successMsg);
+      } else {
+        showToast('No se pudo copiar. Mantené presionado y copiá a mano.');
+      }
+    }
+
+    function copyResumen() {
+      const m = calculateMetrics();
+      const horasTxt = m.horasDisp !== '–' ? m.horasDisp : '0';
+      const captTxt = m.captDisp !== '–' ? m.captDisp : '0';
+
+      const lines = [
+        '📊 Cierre de jornada',
+        `Horas: ${horasTxt} | Captadores: ${captTxt}`,
+        `Socios: ${m.countSocios}`,
+        `Total recaudado: ${formatPesos(m.totalRecaudado)}`,
+        `Promedio por socio: ${m.promSocio !== '–' ? m.promSocio : '$ 0,00'}`,
+        `Total de puntos: ${formatNumberDecimal(m.totalPuntos, 2)}`,
+        `Puntos por hora: ${m.ptsPorHora}`,
+        `Edad promedio: ${m.edadProm}`,
+        '',
+        'Por medio de pago:'
+      ];
+
+      MEDIOS_PAGO_CONFIG.forEach(item => {
+        let label = item.nombre;
+        if (item.id === 'prepaga') label = 'Billetera virtual / prepaga';
+        lines.push(`${label}: ${m.countByMedio[item.id]}`);
+      });
+
+      copyToClipboard(lines.join('\n'), 'Resumen copiado');
+    }
+
+    function copyListado() {
+      if (state.socios.length === 0) {
+        showToast('No hay socios cargados');
+        return;
+      }
+
+      const lines = state.socios.map((s, idx) => {
+        return `${idx + 1}. ${s.edad} años, ${s.medioNombre}, ${formatPesos(s.monto)}.`;
+      });
+
+      copyToClipboard(lines.join('\n'), 'Listado copiado');
+    }
+
+    /* ============================================================
+       BORRAR TODO (Two-touch)
+       ============================================================ */
+    let borrarTodoTimeout = null;
+    function handleBorrarTodo() {
+      if (btnBorrarTodo.dataset.confirming === 'true') {
+        if (borrarTodoTimeout) clearTimeout(borrarTodoTimeout);
+        btnBorrarTodo.dataset.confirming = 'false';
+        btnBorrarTodo.classList.remove('confirming');
+        btnBorrarText.textContent = 'Borrar todo';
+
+        // Borrar todo el estado
+        state.horas = '';
+        state.captadores = '';
+        state.socios = [];
+        inputHoras.value = '';
+        inputCaptadores.value = '';
+        resetForm();
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch (e) {}
+
+        updateUI();
+        showToast('Jornada borrada');
+      } else {
+        btnBorrarTodo.dataset.confirming = 'true';
+        btnBorrarTodo.classList.add('confirming');
+        btnBorrarText.textContent = '¿Seguro? Tocá de nuevo para borrar todo';
+
+        borrarTodoTimeout = setTimeout(() => {
+          btnBorrarTodo.dataset.confirming = 'false';
+          btnBorrarTodo.classList.remove('confirming');
+          btnBorrarText.textContent = 'Borrar todo';
+          borrarTodoTimeout = null;
+        }, 4000);
+      }
+    }
+
+    /* ============================================================
+       FILTRADO ESTRICTO DE EDAD Y ENTERS
+       ============================================================ */
+    function filterEdadInput() {
+      // Filtrar inmediatamente cualquier no-dígito
+      const sanitized = inputEdad.value.replace(/\D/g, '').slice(0, 2);
+      if (inputEdad.value !== sanitized) {
+        inputEdad.value = sanitized;
+      }
+      hideError();
+    }
+
+    inputEdad.addEventListener('input', filterEdadInput);
+    inputEdad.addEventListener('paste', () => setTimeout(filterEdadInput, 0));
+
+    inputMonto.addEventListener('input', hideError);
+
+    inputHoras.addEventListener('input', (e) => {
+      state.horas = e.target.value;
+      saveToStorage();
+      calculateMetrics();
+    });
+
+    inputCaptadores.addEventListener('input', (e) => {
+      // Solo enteros
+      const val = e.target.value.replace(/\D/g, '');
+      if (e.target.value !== val) e.target.value = val;
+      state.captadores = val;
+      saveToStorage();
+      calculateMetrics();
+    });
+
+    // Navegación secuencial con Enter en móvil
+    inputHoras.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        inputCaptadores.focus();
+      }
+    });
+
+    inputCaptadores.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        inputEdad.focus();
+      }
+    });
+
+    inputEdad.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        inputMonto.focus();
+      }
+    });
+
+    inputMonto.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        // Cerrar teclado desenfocando y llevar la vista a los medios de pago
+        inputMonto.blur();
+        paymentGrid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    /* ============================================================
+       EVENT LISTENERS GENERALES
+       ============================================================ */
+    btnSubmit.addEventListener('click', addSocio);
+    btnSaveEdit.addEventListener('click', saveEdit);
+    btnCancelEdit.addEventListener('click', cancelEdit);
+    btnCopiarResumen.addEventListener('click', copyResumen);
+    btnCopiarListado.addEventListener('click', copyListado);
+    btnBorrarTodo.addEventListener('click', handleBorrarTodo);
+
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPaymentButtons();
+      loadFromStorage();
+      updateUI();
+    });
+  </script>
+</body>
+</html>
